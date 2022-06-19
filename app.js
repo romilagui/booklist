@@ -25,6 +25,28 @@ list.appendChild(row);
   //console.log(row);
 }
 
+// Show Alert
+UI.prototype.showAlert =  function(message, className){
+// Create div
+const div = document.createElement('div');
+// Add Classes
+div.className = `alert ${className}`;
+// Add test
+div.appendChild(document.createTextNode(message));
+// Get parent
+const container = document.querySelector('.container');
+
+// Get form
+const form = document.querySelector('#book-form');
+container.insertBefore(div, form);
+
+// Time out (desappear) after 3 sec
+// setTimeout is a window object that takes in a function 
+setTimeout(function() {
+  document.querySelector('.alert').remove();
+}, 3000);
+}
+
 // Clear Fields
 // Is not working 
 UI.prototype.clearFields = function(){
@@ -33,7 +55,7 @@ UI.prototype.clearFields = function(){
   document.getElementById('isbn').value = '';
 }
 
-// Event Listeners
+// Event Listener for Add book
 document.getElementById('book-form').addEventListener('submit', function(e){
   //console.log('test');
   // When we click submit we get test on thw console
@@ -50,12 +72,45 @@ document.getElementById('book-form').addEventListener('submit', function(e){
 
   // Instantiate a UI Object
   const ui = new UI();
+
+  // Validate
+  if (title === '' || author === '' || isbn === '') {
+   // Error Alert
+   ui.showAlert('Please fill in all fields', 'error');
+  } else {
+    
   // Add book to list
   //console.log(ui);
   ui.addBookToList(book);
 
+  // Show success
+  ui.showAlert('Book Added!', 'success');
+
+  // Delete Book
+  UI.prototype.deleteBook = function(target) {
+    if(target.className === 'delete'){
+      target.parentElement.parentElement.remove();
+    }}
+
+
 // Clear fields 
 ui.clearFields();
+  }
 
 e.preventDefault();
 });
+
+// Event Listener for Delete
+document.getElementById('book-list').addEventListener('click', function(e){
+  
+   // Instantiate a UI Object
+ const ui = new UI();
+
+ // Delete book
+ ui.deleteBook(e.target);
+
+ // Show message
+ ui.showAlert('Book Removed', 'success')
+  console.log(123);
+  e.preventDefault();
+} );
